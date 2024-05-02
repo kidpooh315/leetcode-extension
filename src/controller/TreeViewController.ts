@@ -46,7 +46,7 @@ import {
   getBelongingWorkspaceFolderUri,
   selectWorkspaceFolder,
 } from "../utils/ConfigUtils";
-import { ITodayDataResponse, TreeNodeModel, TreeNodeType } from "../model/TreeNodeModel";
+import { CreateTreeNodeModel, ITodayDataResponse, TreeNodeModel, TreeNodeType } from "../model/TreeNodeModel";
 import { ISearchSet } from "../model/ConstDefind";
 
 import { ShowMessage, promptForSignIn, promptHintMessage } from "../utils/OutputUtils";
@@ -974,61 +974,61 @@ class TreeViewController implements Disposable {
 
   public getRootNodes(): TreeNodeModel[] {
     const baseNode: TreeNodeModel[] = [
-      new TreeNodeModel(
+      CreateTreeNodeModel(
         {
           id: Category.All,
           name: Category.All,
           rootNodeSortId: RootNodeSort.All,
         },
-        TreeNodeType.TreeDataNormal
+        TreeNodeType.Tree_All
       ),
-      new TreeNodeModel(
+      CreateTreeNodeModel(
         {
           id: Category.Difficulty,
           name: Category.Difficulty,
           rootNodeSortId: RootNodeSort.Difficulty,
         },
-        TreeNodeType.TreeDataNormal
+        TreeNodeType.Tree_difficulty
       ),
-      new TreeNodeModel(
+      CreateTreeNodeModel(
         {
           id: Category.Tag,
           name: Category.Tag,
           rootNodeSortId: RootNodeSort.Tag,
         },
-        TreeNodeType.TreeDataNormal
+        TreeNodeType.Tree_tag
       ),
-      new TreeNodeModel(
+      CreateTreeNodeModel(
         {
           id: Category.Favorite,
           name: Category.Favorite,
           rootNodeSortId: RootNodeSort.Favorite,
         },
-        TreeNodeType.TreeDataNormal
+        TreeNodeType.Tree_favorite
       ),
-      new TreeNodeModel(
+      CreateTreeNodeModel(
         {
           id: Category.Score,
           name: Category.Score,
           rootNodeSortId: RootNodeSort.Score,
         },
-        TreeNodeType.TreeDataNormal
+        TreeNodeType.Tree_score
       ),
-      new TreeNodeModel(
+      CreateTreeNodeModel(
         {
           id: Category.Choice,
           name: Category.Choice,
           rootNodeSortId: RootNodeSort.Choice,
         },
-        TreeNodeType.TreeDataNormal
+        TreeNodeType.Tree_choice
       ),
-      new TreeNodeModel(
+      CreateTreeNodeModel(
         {
           id: Category.Contest,
           name: Category.Contest,
-          rootNodeSortId: RootNodeSort.Context,
+          rootNodeSortId: RootNodeSort.Contest,
         },
-        TreeNodeType.TreeDataNormal
+        TreeNodeType.Tree_contest
       ),
     ];
 
@@ -1038,23 +1038,22 @@ class TreeViewController implements Disposable {
     today_info.forEach((element: ITodayDataResponse) => {
       const curDate = new Date(element.time * 1000);
       baseNode.push(
-        new TreeNodeModel(
+        CreateTreeNodeModel(
           {
             id: element.fid,
-            name: `[${curDate.getFullYear()}-${curDate.getMonth() + 1}-${curDate.getDate()}]${
-              SearchSetTypeName[SearchSetType.Day]
-            }`,
+            name: `[${curDate.getFullYear()}-${curDate.getMonth() + 1}-${curDate.getDate()}]${SearchSetTypeName[SearchSetType.Day]
+              }`,
             isSearchResult: true,
             rootNodeSortId: RootNodeSort.Day,
           },
-          TreeNodeType.TreeDataDay
+          TreeNodeType.Tree_day
         )
       );
     });
 
     this.searchSet.forEach((element) => {
       baseNode.push(
-        new TreeNodeModel(
+        CreateTreeNodeModel(
           {
             id: element.type,
             name: SearchSetTypeName[element.type] + element.value,
@@ -1062,7 +1061,7 @@ class TreeViewController implements Disposable {
             isSearchResult: true,
             rootNodeSortId: RootNodeSort[element.type],
           },
-          TreeNodeType.TreeDataSearch
+          TreeNodeType.Tree_search
         )
       );
     });
@@ -1096,7 +1095,7 @@ class TreeViewController implements Disposable {
             return;
           }
           if (rank_a <= Number(element.score) && Number(element.score) <= rank_b) {
-            sorceNode.push(new TreeNodeModel(element.get_data(), TreeNodeType.TreeDataSearchLeaf));
+            sorceNode.push(CreateTreeNodeModel(element.get_data(), TreeNodeType.Tree_search_score_leaf));
           }
         });
     }
@@ -1113,7 +1112,7 @@ class TreeViewController implements Disposable {
     return true;
   }
 
-  public getContextNodes(rank_range: string): TreeNodeModel[] {
+  public getContestNodes(rank_range: string): TreeNodeModel[] {
     const sorceNode: TreeNodeModel[] = [];
     const rank_r: Array<string> = rank_range.split("-");
     let rank_a = Number(rank_r[0]);
@@ -1126,9 +1125,9 @@ class TreeViewController implements Disposable {
           const slu_arr: Array<string> = slu.split("-");
           const slu_id = Number(slu_arr[slu_arr.length - 1]);
           if (rank_b > 0 && rank_a <= slu_id && slu_id <= rank_b) {
-            sorceNode.push(new TreeNodeModel(element.get_data(), TreeNodeType.TreeDataSearchLeaf));
+            sorceNode.push(CreateTreeNodeModel(element.get_data(), TreeNodeType.Tree_search_contest_leaf));
           } else if (rank_a == slu_id) {
-            sorceNode.push(new TreeNodeModel(element.get_data(), TreeNodeType.TreeDataSearchLeaf));
+            sorceNode.push(CreateTreeNodeModel(element.get_data(), TreeNodeType.Tree_search_contest_leaf));
           }
         });
     }
@@ -1141,7 +1140,7 @@ class TreeViewController implements Disposable {
     let DayQuestionNode: TreeNodeModel | undefined = BABA.getProxy(BabaStr.QuestionDataProxy).getNodeById(fid);
 
     if (DayQuestionNode != undefined) {
-      sorceNode.push(new TreeNodeModel(DayQuestionNode.get_data(), TreeNodeType.TreeDataDayLeaf));
+      sorceNode.push(CreateTreeNodeModel(DayQuestionNode.get_data(), TreeNodeType.Tree_day_leaf));
     }
 
     return sortNodeList(sorceNode);
@@ -1154,52 +1153,44 @@ class TreeViewController implements Disposable {
       .getfidMapQuestionData()
       .forEach((node) => {
         if (this.canShow(node)) {
-          res.push(new TreeNodeModel(node.get_data(), TreeNodeType.TreeDataLeaf));
+          res.push(CreateTreeNodeModel(node.get_data(), TreeNodeType.Tree_All_leaf));
         }
       });
     return sortNodeList(res);
   }
 
-  public getAllDifficultyNodes(): TreeNodeModel[] {
+  public getDifficultyChild(): TreeNodeModel[] {
     const res: TreeNodeModel[] = [];
     res.push(
-      new TreeNodeModel(
+      CreateTreeNodeModel(
         {
-          id: `${Category.Difficulty}.Easy`,
+          id: `Easy`,
           name: "Easy",
           rootNodeSortId: RootNodeSort.DIFEASY,
         },
-        TreeNodeType.TreeDataNormal
+        TreeNodeType.Tree_difficulty_easy
       ),
-      new TreeNodeModel(
+      CreateTreeNodeModel(
         {
-          id: `${Category.Difficulty}.Medium`,
+          id: `Medium`,
           name: "Medium",
           rootNodeSortId: RootNodeSort.DIFMID,
         },
-        TreeNodeType.TreeDataNormal
+        TreeNodeType.Tree_difficulty_mid
       ),
-      new TreeNodeModel(
+      CreateTreeNodeModel(
         {
-          id: `${Category.Difficulty}.Hard`,
+          id: `Hard`,
           name: "Hard",
           rootNodeSortId: RootNodeSort.DIFHARD,
         },
-        TreeNodeType.TreeDataNormal
+        TreeNodeType.Tree_difficulty_hard
       )
     );
-    res.sort(function (a: TreeNodeModel, b: TreeNodeModel): number {
-      if (a.rootNodeSortId < b.rootNodeSortId) {
-        return -1;
-      } else if (a.rootNodeSortId > b.rootNodeSortId) {
-        return 1;
-      }
-      return 0;
-    });
     return res;
   }
 
-  public getAllScoreNodes(): TreeNodeModel[] {
+  public getScoreChild(): TreeNodeModel[] {
     const user_score = BABA.getProxy(BabaStr.StatusBarProxy).getUserContestScore();
     const res: TreeNodeModel[] = [];
     const score_array: Array<string> = [
@@ -1227,18 +1218,18 @@ class TreeViewController implements Disposable {
       "1200",
       "1100",
     ];
-    score_array.forEach((element) => {
-      const temp_num = Number(element);
+    score_array.forEach((score_str) => {
+      const temp_num = Number(score_str);
       const diff = Math.abs(temp_num - user_score);
       if (diff <= 200) {
         res.push(
-          new TreeNodeModel(
+          CreateTreeNodeModel(
             {
-              id: `${Category.Score}.${element}`,
-              name: `${element}`,
+              id: `${score_str}`,
+              name: `${score_str}`,
               rootNodeSortId: temp_num,
             },
-            TreeNodeType.TreeDataNormal
+            TreeNodeType.Tree_score_fen
           )
         );
       }
@@ -1246,93 +1237,74 @@ class TreeViewController implements Disposable {
     return res;
   }
 
-  public getAllContestNodes(): TreeNodeModel[] {
+  public getContestChild(): TreeNodeModel[] {
     const res: TreeNodeModel[] = [];
     res.push(
-      new TreeNodeModel(
+      CreateTreeNodeModel(
         {
-          id: `${Category.Contest}.Q1`,
+          id: `Q1`,
           name: "Q1",
           rootNodeSortId: 1,
         },
-        TreeNodeType.TreeDataNormal
+        TreeNodeType.Tree_contest_Q1
       ),
-      new TreeNodeModel(
+      CreateTreeNodeModel(
         {
-          id: `${Category.Contest}.Q2`,
+          id: `Q2`,
           name: "Q2",
           rootNodeSortId: 2,
         },
-        TreeNodeType.TreeDataNormal
+        TreeNodeType.Tree_contest_Q2
       ),
-      new TreeNodeModel(
+      CreateTreeNodeModel(
         {
-          id: `${Category.Contest}.Q3`,
+          id: `Q3`,
           name: "Q3",
           rootNodeSortId: 3,
         },
-        TreeNodeType.TreeDataNormal
+        TreeNodeType.Tree_contest_Q3
       ),
-      new TreeNodeModel(
+      CreateTreeNodeModel(
         {
-          id: `${Category.Contest}.Q4`,
+          id: `Q4`,
           name: "Q4",
           rootNodeSortId: 4,
         },
-        TreeNodeType.TreeDataNormal
+        TreeNodeType.Tree_contest_Q4
       )
     );
-    this.sortSubCategoryNodes(res, Category.Contest);
     return res;
   }
-  public getAllChoiceNodes(): TreeNodeModel[] {
+  public getChoiceChild(): TreeNodeModel[] {
     const res: TreeNodeModel[] = [];
 
     const all_choice = BABA.getProxy(BabaStr.TreeDataProxy).getChoiceData();
     all_choice.forEach((element) => {
       res.push(
-        new TreeNodeModel(
+        CreateTreeNodeModel(
           {
-            id: `${Category.Choice}.${element.id}`,
+            id: `${element.id}`,
             name: `${element.name}`,
             rootNodeSortId: 4,
           },
-          TreeNodeType.TreeDataNormal
+          TreeNodeType.Tree_choice_fenlei
         )
       );
     });
     return res;
   }
 
-  public getAllCompanyNodes(): TreeNodeModel[] {
-    const res: TreeNodeModel[] = [];
-    for (const company of BABA.getProxy(BabaStr.QuestionDataProxy).getCompanySet().values()) {
-      res.push(
-        new TreeNodeModel(
-          {
-            id: `${Category.Company}.${company}`,
-            name: lodash.startCase(company),
-            rootNodeSortId: 4,
-          },
-          TreeNodeType.TreeDataNormal
-        )
-      );
-    }
-    this.sortSubCategoryNodes(res, Category.Company);
-    return res;
-  }
-
-  public getAllTagNodes(): TreeNodeModel[] {
+  public getTagChild(): TreeNodeModel[] {
     const res: TreeNodeModel[] = [];
     for (const tag of BABA.getProxy(BabaStr.QuestionDataProxy).getTagSet().values()) {
       res.push(
-        new TreeNodeModel(
+        CreateTreeNodeModel(
           {
-            id: `${Category.Tag}.${tag}`,
+            id: `${tag}`,
             name: lodash.startCase(tag),
             rootNodeSortId: 4,
           },
-          TreeNodeType.TreeDataNormal
+          TreeNodeType.Tree_tag_fenlei
         )
       );
     }
@@ -1346,22 +1318,20 @@ class TreeViewController implements Disposable {
       .getfidMapQuestionData()
       .forEach((node) => {
         if (this.canShow(node) && node.isFavorite) {
-          res.push(new TreeNodeModel(node.get_data(), TreeNodeType.TreeDataLeaf));
+          res.push(CreateTreeNodeModel(node.get_data(), TreeNodeType.Tree_favorite_leaf));
         }
       });
     return sortNodeList(res);
   }
 
-  public getChildrenNodesById(id: string): TreeNodeModel[] {
-    // The sub-category node's id is named as {Category.SubName}
-    const metaInfo: string[] = id.split(".");
+  // 第二层取第三层的叶子
+  public getChildrenSon(TreeChildNode: TreeNodeModel): TreeNodeModel[] {
     const res: TreeNodeModel[] = [];
-
     const choiceQuestionId: Map<number, boolean> = new Map<number, boolean>();
-    if (metaInfo[0] == Category.Choice) {
+    if (TreeChildNode.nodeType == TreeNodeType.Tree_choice_fenlei) {
       const all_choice = BABA.getProxy(BabaStr.TreeDataProxy).getChoiceData();
       all_choice.forEach((element) => {
-        if (element.id == metaInfo[1]) {
+        if (element.id == TreeChildNode.id) {
           element.questions.forEach((kk) => {
             choiceQuestionId[kk] = true;
           });
@@ -1374,44 +1344,71 @@ class TreeViewController implements Disposable {
       if (!this.canShow(node)) {
         continue;
       }
-      let new_node = new TreeNodeModel(node.get_data(), TreeNodeType.TreeDataLeaf);
+      if (TreeChildNode.nodeType == TreeNodeType.Tree_difficulty_easy) {
+        if (node.get_data().difficulty === TreeChildNode.id) {
+          res.push(CreateTreeNodeModel(node.get_data(), TreeNodeType.Tree_difficulty_easy_leaf));
 
-      switch (metaInfo[0]) {
-        case Category.Company:
-          if (new_node.companies.indexOf(metaInfo[1]) >= 0) {
-            res.push(new_node);
-          }
-          break;
-        case Category.Difficulty:
-          if (new_node.difficulty === metaInfo[1]) {
-            res.push(new_node);
-          }
-          break;
-        case Category.Tag:
-          if (new_node.tags.indexOf(metaInfo[1]) >= 0) {
-            res.push(new_node);
-          }
-          break;
-        case Category.Score:
-          if (new_node.score > "0") {
-            const check_rank = toNumber(metaInfo[1]);
-            const node_rank = toNumber(new_node.score);
-            if (check_rank <= node_rank && node_rank < check_rank + 100) {
-              res.push(new_node);
-            }
-          }
-          break;
-        case Category.Choice:
-          if (choiceQuestionId[Number(new_node.qid)]) {
-            res.push(new_node);
-          }
-          break;
-        case Category.Contest:
-          if (new_node.ProblemIndex == metaInfo[1]) {
-            res.push(new_node);
-          }
-          break;
+        }
       }
+      else if (TreeChildNode.nodeType == TreeNodeType.Tree_difficulty_mid) {
+        if (node.get_data().difficulty === TreeChildNode.id) {
+          res.push(CreateTreeNodeModel(node.get_data(), TreeNodeType.Tree_difficulty_mid_leaf));
+
+        }
+      }
+      else if (TreeChildNode.nodeType == TreeNodeType.Tree_difficulty_hard) {
+        if (node.get_data().difficulty === TreeChildNode.id) {
+          res.push(CreateTreeNodeModel(node.get_data(), TreeNodeType.Tree_difficulty_hard_leaf));
+
+        }
+      }
+      else if (TreeChildNode.nodeType == TreeNodeType.Tree_tag_fenlei) {
+        if (node.tags.indexOf(TreeChildNode.id) >= 0) {
+          res.push(CreateTreeNodeModel(node.get_data(), TreeNodeType.Tree_tag_fenlei_leaf));
+        }
+      }
+
+      else if (TreeChildNode.nodeType == TreeNodeType.Tree_score_fen) {
+        if (node.score > "0") {
+          const check_rank = toNumber(TreeChildNode.id);
+          const node_rank = toNumber(node.score);
+          if (check_rank <= node_rank && node_rank < check_rank + 100) {
+            res.push(CreateTreeNodeModel(node.get_data(), TreeNodeType.Tree_score_fen_leaf));
+          }
+        }
+      }
+
+      else if (TreeChildNode.nodeType == TreeNodeType.Tree_choice_fenlei) {
+        if (choiceQuestionId[Number(node.get_data().qid)]) {
+          res.push(CreateTreeNodeModel(node.get_data(), TreeNodeType.Tree_choice_fenlei_leaf));
+        }
+      }
+
+      else if (TreeChildNode.nodeType == TreeNodeType.Tree_contest_Q1) {
+        if (node.ProblemIndex == TreeChildNode.id) {
+          res.push(CreateTreeNodeModel(node.get_data(), TreeNodeType.Tree_contest_Q1_leaf));
+        }
+      }
+
+      else if (TreeChildNode.nodeType == TreeNodeType.Tree_contest_Q2) {
+        if (node.ProblemIndex == TreeChildNode.id) {
+          res.push(CreateTreeNodeModel(node.get_data(), TreeNodeType.Tree_contest_Q2_leaf));
+        }
+      }
+
+      else if (TreeChildNode.nodeType == TreeNodeType.Tree_contest_Q3) {
+        if (node.ProblemIndex == TreeChildNode.id) {
+          res.push(CreateTreeNodeModel(node.get_data(), TreeNodeType.Tree_contest_Q3_leaf));
+        }
+      }
+
+      else if (TreeChildNode.nodeType == TreeNodeType.Tree_contest_Q4) {
+        if (node.ProblemIndex == TreeChildNode.id) {
+          res.push(CreateTreeNodeModel(node.get_data(), TreeNodeType.Tree_contest_Q4_leaf));
+        }
+      }
+
+
     }
     return sortNodeList(res);
   }
@@ -1424,7 +1421,6 @@ class TreeViewController implements Disposable {
   private sortSubCategoryNodes(subCategoryNodes: TreeNodeModel[], category: Category): void {
     switch (category) {
       case Category.Tag:
-      case Category.Company:
         subCategoryNodes.sort((a: TreeNodeModel, b: TreeNodeModel): number => {
           if (a.name === "Unknown") {
             return 1;
