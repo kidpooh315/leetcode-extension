@@ -130,11 +130,6 @@
                 "category": "LeetCode"
             },
             {
-                "command": "lcpr.setBricksType7",
-                "title": "%main.contributes.commands.lcpr.setBricksType7.title%",
-                "category": "LeetCode"
-            },
-            {
                 "command": "lcpr.searchProblem",
                 "title": "%main.contributes.commands.lcpr.searchProblem.title%",
                 "category": "LeetCode",
@@ -257,6 +252,16 @@
             {
                 "command": "lcpr.removeBricksHave",
                 "title": "%main.contributes.commands.lcpr.removeBricksHave.title%",
+                "icon": "$(remove)"
+            },
+            {
+                "command": "lcpr.removeBricksNeedReviewDay",
+                "title": "%main.contributes.commands.lcpr.removeBricksNeedReviewDay.title%",
+                "icon": "$(remove)"
+            },
+            {
+                "command": "lcpr.removeBricksNeedReviewDayNode",
+                "title": "%main.contributes.commands.lcpr.removeBricksNeedReviewDayNode.title%",
                 "icon": "$(remove)"
             }
         ],
@@ -454,12 +459,12 @@
                 },
                 {
                     "command": "lcpr.addQidToGroup",
-                    "when": "view == BricksExplorer && viewItem != nodebricksdiy && viewItem != brickshave && viewItem != brickstoday && viewItem != bricksdiy",
+                    "when": "view == BricksExplorer && viewItem != nodebricksdiy && viewItem != bricksneedredate && viewItem != bricksneedreview && viewItem != brickstodaysubmit && viewItem != bricksdiy",
                     "group": "leetcode@5"
                 },
                 {
                     "command": "lcpr.removeBricksHave",
-                    "when": "view == BricksExplorer && viewItem == brickshave",
+                    "when": "view == BricksExplorer && viewItem == bricksneedreview",
                     "group": "leetcode@5"
                 },
                 {
@@ -470,6 +475,16 @@
                 {
                     "command": "lcpr.removeBrickGroup",
                     "when": "view == BricksExplorer && viewItem == bricksdiy",
+                    "group": "leetcode@1"
+                },
+                {
+                    "command": "lcpr.removeBricksNeedReviewDay",
+                    "when": "view == BricksExplorer && viewItem == bricksneedredate",
+                    "group": "leetcode@1"
+                },
+                {
+                    "command": "lcpr.removeBricksNeedReviewDayNode",
+                    "when": "view == BricksExplorer && viewItem == bricksneedreview",
                     "group": "leetcode@1"
                 }
             ],
@@ -514,27 +529,27 @@
                     "group": "leetcode@1"
                 },
                 {
-                    "command": "lcpr.setBricksType6",
+                    "command": "lcpr.setBricksType1",
                     "group": "leetcode@2"
                 },
                 {
-                    "command": "lcpr.setBricksType5",
+                    "command": "lcpr.setBricksType2",
                     "group": "leetcode@3"
                 },
                 {
-                    "command": "lcpr.setBricksType4",
+                    "command": "lcpr.setBricksType3",
                     "group": "leetcode@4"
                 },
                 {
-                    "command": "lcpr.setBricksType3",
+                    "command": "lcpr.setBricksType4",
                     "group": "leetcode@5"
                 },
                 {
-                    "command": "lcpr.setBricksType2",
+                    "command": "lcpr.setBricksType5",
                     "group": "leetcode@6"
                 },
                 {
-                    "command": "lcpr.setBricksType1",
+                    "command": "lcpr.setBricksType6",
                     "group": "leetcode@7"
                 }
             ],
@@ -544,27 +559,27 @@
                     "group": "leetcode@1"
                 },
                 {
-                    "command": "lcpr.setBricksType6",
+                    "command": "lcpr.setBricksType1",
                     "group": "leetcode@2"
                 },
                 {
-                    "command": "lcpr.setBricksType5",
+                    "command": "lcpr.setBricksType2",
                     "group": "leetcode@3"
                 },
                 {
-                    "command": "lcpr.setBricksType4",
+                    "command": "lcpr.setBricksType3",
                     "group": "leetcode@4"
                 },
                 {
-                    "command": "lcpr.setBricksType3",
+                    "command": "lcpr.setBricksType4",
                     "group": "leetcode@5"
                 },
                 {
-                    "command": "lcpr.setBricksType2",
+                    "command": "lcpr.setBricksType5",
                     "group": "leetcode@6"
                 },
                 {
-                    "command": "lcpr.setBricksType1",
+                    "command": "lcpr.setBricksType6",
                     "group": "leetcode@7"
                 }
             ]
@@ -1038,6 +1053,22 @@
                         "default": true,
                         "scope": "application",
                         "description": "%main.contributes.configuration.properties.leetcode-problem-rating.enableTimerBar.description%"
+                    },
+                    "leetcode-problem-rating.editor.bricksReviewDay": {
+                        "type": "array",
+                        "default": [
+                            1,
+                            4,
+                            7,
+                            14,
+                            28,
+                            60
+                        ],
+                        "items": {
+                            "type": "number"
+                        },
+                        "scope": "application",
+                        "description": "%main.contributes.configuration.properties.leetcode-problem-rating.editor.bricksNextDay.description%"
                     },
                     "leetcode-problem-rating.editor.shortcuts": {
                         "type": "array",

@@ -72,16 +72,84 @@ export interface ITodayDataResponse {
 }
 
 export enum TreeNodeType {
-  TreeDataNormal = 1, // 普通题目根
-  TreeDataLeaf = 2, // 普通题目叶子
-  BricksDataNormal = 3, // 普通砖头根
-  BricksDataLeaf = 4, // 普通砖头叶子
-  TreeDataSearch = 5, // 查询的根
-  TreeDataSearchLeaf = 6, // 查询的叶子
-  TreeDataDay = 7, // 每日一题的根
-  TreeDataDayLeaf = 8, // 每日一题的叶子
-  TreeQuestionData = 9, // 题目数据
+
+  // 功能节点
+  TreeNotSignIn = 30100,
+  BricksNotSignIn = 30200,
+  TreeQuestionData = 30300,
+
+  // 四位
+  // 万位  1:题目列表 2:搬砖工地
+  // 千位  第一层的标识
+  // 百位  第一层的标识
+  // 十位  第二层的标识
+  // 个位  第三层标识
+
+  Tree_day = 10100,  // 题目列表 每日一题
+  Tree_day_leaf = 10111,  // 题目列表 每日一题的叶子
+  Tree_All = 10200,   // all层
+  Tree_All_leaf = 10211, // all层 的题目
+
+  Tree_difficulty = 10300,   // difficulty
+  Tree_difficulty_easy = 10310,   // difficulty/easy
+  Tree_difficulty_easy_leaf = 10311,   // difficulty/easy
+  Tree_difficulty_mid = 10320,   // difficulty/medium
+  Tree_difficulty_mid_leaf = 10321,   // difficulty/medium
+  Tree_difficulty_hard = 10330,   // difficulty/hard
+  Tree_difficulty_hard_leaf = 10331,   // difficulty/hard
+
+  Tree_tag = 10400, // tag
+  Tree_tag_fenlei = 10410, // tag
+  Tree_tag_fenlei_leaf = 10411, // tag
+
+  Tree_favorite = 10500, // favorite
+  Tree_favorite_leaf = 10511, // 题目
+
+  Tree_choice = 10600, // choice
+  Tree_choice_fenlei = 10610, // choice 分类层
+  Tree_choice_fenlei_leaf = 10611, // choice 分类层
+
+  Tree_score = 10700,// score
+  Tree_score_fen = 10710, //具体分数层
+  Tree_score_fen_leaf = 10711, //具体分数层
+
+  Tree_contest = 10800, // contest
+  Tree_contest_Q1 = 10810, // contest q1
+  Tree_contest_Q1_leaf = 10811, // contest q1
+  Tree_contest_Q2 = 10820, // contest q2
+  Tree_contest_Q2_leaf = 10821, // contest q2
+  Tree_contest_Q3 = 10830, // contest q3
+  Tree_contest_Q3_leaf = 10831, // contest q3
+  Tree_contest_Q4 = 10840, // contest q4
+  Tree_contest_Q4_leaf = 10841, // contest q4
+
+  Tree_search = 10900, // 查询分数范围,周赛期数
+  Tree_search_score_leaf = 10911, // 分数范围的叶子
+  Tree_search_contest_leaf = 10921, // 分数范围的叶子
+
+
+  // 工地=================
+
+  Bricks_NeedReview = 20100,  // 工地 有需要复习
+  Bricks_NeedReview_Day = 20110,  // 工地 有需要复习,日期那层
+  Bricks_NeedReview_Day_leaf = 20111, // 工地 有需要复习,题目
+
+  Bricks_NoReview = 20200, // 工地 没有需要复习
+
+  Bricks_TodaySubmit = 20300, // 工地 今日提交
+  Bricks_TodaySubmit_leaf = 20301, // 工地 今日提交
+
+
+  Bricks_Diy = 20400, // 工地 自己创建的那层
+  Bricks_Diy_leaf = 20401, // 工地 自己创建的那层
+
+
 }
+
+export function CreateTreeNodeModel(data: ITreeDataNormal | ITreeDataSearch | ITreeDataDay | IQuestionData | IBricksToday, nodeType: TreeNodeType): TreeNodeModel {
+  return new TreeNodeModel(data, nodeType);
+}
+
 
 export class TreeNodeModel {
   __DataPool: Map<TreeNodeType, any> = new Map<TreeNodeType, any>();
@@ -163,15 +231,30 @@ export class TreeNodeModel {
   }
 
   public get isSearchResult(): boolean {
-    return this.nodeType == TreeNodeType.TreeDataSearch || this.nodeType == TreeNodeType.TreeDataDay;
+    return this.nodeType == TreeNodeType.Tree_search || this.nodeType == TreeNodeType.Tree_day;
   }
 
   public get isProblem(): boolean {
     return (
-      this.nodeType == TreeNodeType.TreeDataLeaf ||
-      this.nodeType == TreeNodeType.BricksDataLeaf ||
-      this.nodeType == TreeNodeType.TreeDataSearchLeaf ||
-      this.nodeType == TreeNodeType.TreeDataDayLeaf
+      this.nodeType == TreeNodeType.Tree_search_score_leaf ||
+      this.nodeType == TreeNodeType.Tree_search_contest_leaf ||
+      this.nodeType == TreeNodeType.Tree_day_leaf ||
+      this.nodeType == TreeNodeType.Tree_All_leaf ||
+      this.nodeType == TreeNodeType.Tree_difficulty_easy_leaf ||
+      this.nodeType == TreeNodeType.Tree_difficulty_mid_leaf ||
+      this.nodeType == TreeNodeType.Tree_difficulty_hard_leaf ||
+      this.nodeType == TreeNodeType.Tree_tag_fenlei_leaf ||
+      this.nodeType == TreeNodeType.Tree_favorite_leaf ||
+      this.nodeType == TreeNodeType.Tree_choice_fenlei_leaf ||
+      this.nodeType == TreeNodeType.Tree_score_fen_leaf ||
+      this.nodeType == TreeNodeType.Tree_contest_Q1_leaf ||
+      this.nodeType == TreeNodeType.Tree_contest_Q2_leaf ||
+      this.nodeType == TreeNodeType.Tree_contest_Q3_leaf ||
+      this.nodeType == TreeNodeType.Tree_contest_Q4_leaf ||
+      this.nodeType == TreeNodeType.Bricks_NeedReview_Day_leaf ||
+      this.nodeType == TreeNodeType.Bricks_TodaySubmit_leaf ||
+      this.nodeType == TreeNodeType.Bricks_Diy_leaf
+
     );
   }
 
@@ -231,155 +314,3 @@ export class TreeNodeModel {
     });
   }
 }
-
-// export class NodeModel {
-//   private _u_score;
-//   constructor(public data: IProblem, public isProblemNode: boolean = true, userscore: number = 0) {
-//     this._u_score = userscore;
-//   }
-
-//   public get locked(): boolean {
-//     return this.data.locked;
-//   }
-//   public get name(): string {
-//     return this.data.name;
-//   }
-//   public get cn_name(): string {
-//     return this.data.cn_name;
-//   }
-//   public get en_name(): string {
-//     return this.data.en_name;
-//   }
-
-//   public get state(): ProblemState {
-//     // 每日一题的修正
-//     if (this.todayData) {
-//       const us = this.todayDataUserStatus;
-//       if (us == "FINISH") {
-//         return ProblemState.AC;
-//       } else {
-//         return ProblemState.Unknown;
-//       }
-//     }
-
-//     return this.data.state;
-//   }
-
-//   public get id(): string {
-//     return this.data.id;
-//   }
-
-//   public get passRate(): string {
-//     return this.data.passRate;
-//   }
-
-//   public get difficulty(): string {
-//     return this.data.difficulty;
-//   }
-
-//   public get companies(): string[] {
-//     return this.data.companies;
-//   }
-
-//   public get isFavorite(): boolean {
-//     return this.data.isFavorite;
-//   }
-
-//   public get isProblem(): boolean {
-//     return this.isProblemNode;
-//   }
-//   public get rootNodeSortId(): RootNodeSort {
-//     return this.data.rootNodeSortId;
-//   }
-
-//   public get previewCommand(): Command {
-//     return {
-//       title: "Preview Problem",
-//       command: "lcpr.previewProblem",
-//       arguments: [this],
-//     };
-//   }
-
-//   public get acceptanceRate(): number {
-//     return Number(this.passRate) || 50;
-//   }
-
-//   public get uri(): Uri {
-//     return Uri.from({
-//       scheme: "leetcode",
-//       authority: this.isProblem ? "problems" : "tree-node",
-//       path: `/${this.id}`, // path must begin with slash /
-//       query: `difficulty=${this.difficulty}&score=${this.score}&user_score=${this._u_score}`,
-//     });
-//   }
-
-//   public set set_user_score(s: number) {
-//     this._u_score = s;
-//   }
-
-//   public get user_score(): number {
-//     return this._u_score;
-//   }
-
-//   // rank分
-//   public get score(): string {
-//     return this.data.scoreData?.score || "0";
-//   }
-//   // 周赛名称
-//   public get ContestID_en(): string {
-//     return this.data.scoreData?.ContestID_en || "";
-//   }
-//   // 周赛第几题
-//   public get ProblemIndex(): string {
-//     return this.data.scoreData?.ProblemIndex || "";
-//   }
-//   // 周赛名称符号链接
-//   public get ContestSlug(): string {
-//     return this.data.scoreData?.ContestSlug || "";
-//   }
-//   public get scoreData(): IScoreData | undefined {
-//     return this.data.scoreData;
-//   }
-//   public get isSearchResult(): boolean {
-//     return this.data.isSearchResult;
-//   }
-//   public get input(): string {
-//     return this.data.input || "";
-//   }
-//   // 每日一题的一些信息
-//   public get todayData(): ITodayData | undefined {
-//     return this.data.todayData;
-//   }
-//   public set todayData(s: ITodayData | undefined) {
-//     this.data.todayData = s;
-//   }
-//   public get todayDataDate(): string {
-//     return this.data.todayData?.date || "";
-//   }
-//   public get todayDataUserStatus(): string {
-//     return this.data.todayData?.userStatus || "";
-//   }
-//   public get qid(): string {
-//     return this.data.qid || "";
-//   }
-// }
-
-// export class BricksNode extends NodeModel {
-//   public collapsibleState?;
-//   public groupTime?;
-//   public toolTip?;
-//   constructor(
-//     data: IProblem,
-//     ipn: boolean = true,
-//     userscore: number = 0,
-//     collapsibleState = 0,
-//     groupTime?: number,
-//     toolTip?: string
-//   ) {
-//     super(data, ipn, userscore);
-//     this.isProblemNode = ipn;
-//     this.collapsibleState = collapsibleState;
-//     this.groupTime = groupTime;
-//     this.toolTip = toolTip;
-//   }
-// }

@@ -9,7 +9,7 @@
 
 import { BABA, BABAMediator, BABAProxy, BabaStr, BaseCC } from "../BABA";
 import { ISubmitEvent, OutPutType, ProblemState, UserStatus } from "../model/ConstDefind";
-import { IQuestionData, TreeNodeModel, TreeNodeType } from "../model/TreeNodeModel";
+import { CreateTreeNodeModel, IQuestionData, TreeNodeModel, TreeNodeType } from "../model/TreeNodeModel";
 
 import { isShowLocked, isUseEndpointTranslation } from "../utils/ConfigUtils";
 import { ShowMessage } from "../utils/OutputUtils";
@@ -32,7 +32,7 @@ class QuestionData {
   public async ReBuildQuestionData() {
     let all_data = await BABA.getProxy(BabaStr.QuestionDataProxy).getAllQuestionData();
     for (const problem of all_data) {
-      let TreeNodeObj = new TreeNodeModel(problem, TreeNodeType.TreeQuestionData);
+      let TreeNodeObj = CreateTreeNodeModel(problem, TreeNodeType.TreeQuestionData);
       this.fidMapQuestionData.set(TreeNodeObj.id, TreeNodeObj);
       this.fidToQid.set(TreeNodeObj.id, TreeNodeObj.qid.toString());
       this.qidToFid.set(TreeNodeObj.qid.toString(), TreeNodeObj.id);

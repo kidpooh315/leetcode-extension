@@ -8,9 +8,9 @@
  */
 
 import { TreeDataProvider, EventEmitter, Event, TreeItem, TreeItemCollapsibleState } from "vscode";
-import { BricksNormalId, ISubmitEvent } from "../model/ConstDefind";
+import { BricksNormalId, BricksType, ISubmitEvent } from "../model/ConstDefind";
 import { bricksViewController } from "../controller/BricksViewController";
-import { TreeNodeModel, TreeNodeType } from "../model/TreeNodeModel";
+import { CreateTreeNodeModel, TreeNodeModel, TreeNodeType } from "../model/TreeNodeModel";
 import { bricksDao } from "../dao/bricksDao";
 import { groupDao } from "../dao/groupDao";
 import { BABA, BABAMediator, BABAProxy, BabaStr, BaseCC } from "../BABA";
@@ -33,7 +33,7 @@ export class BricksDataService implements TreeDataProvider<TreeNodeModel> {
 
   // 节点的内容
   public getTreeItem(element: TreeNodeModel): TreeItem | Thenable<TreeItem> {
-    if (element.id === "notSignIn") {
+    if (element.id === BricksNormalId.NotSignIn) {
       return {
         label: element.name,
         collapsibleState: element.collapsibleState, // 没有子节点
@@ -69,33 +69,31 @@ export class BricksDataService implements TreeDataProvider<TreeNodeModel> {
     let sbp = BABA.getProxy(BabaStr.StatusBarProxy);
     if (!sbp.getUser()) {
       return [
-        new TreeNodeModel(
-          {
-            id: "notSignIn",
-            name: "工头说你不是我们工地的人",
-            collapsibleState: TreeItemCollapsibleState.None,
-          },
-          TreeNodeType.BricksDataNormal
-        ),
+        CreateTreeNodeModel({
+          id: BricksNormalId.NotSignIn,
+          name: "工头说你不是我们工地的人",
+          collapsibleState: TreeItemCollapsibleState.None,
+        },
+          TreeNodeType.BricksNotSignIn)
       ];
     }
     if (!element) {
       return await bricksViewController.getRootNodes();
     } else {
-      switch (element.id) {
-        case BricksNormalId.Today:
-          return await bricksViewController.getTodayNodes();
-          break;
-        case BricksNormalId.Have:
-          return await bricksViewController.getHaveNodes();
-          break;
-        case BricksNormalId.DIY:
-          return await bricksViewController.getDiyNode(element);
-          break;
-        default:
-          return [];
-          break;
+
+      if (element.nodeType == TreeNodeType.Bricks_TodaySubmit) {
+        return await bricksViewController.getTodayNodes();
       }
+      else if (element.nodeType == TreeNodeType.Bricks_NeedReview) {
+        return await bricksViewController.getNeedReviewDayNodes();
+      }
+      else if (element.nodeType == TreeNodeType.Bricks_Diy) {
+        return await bricksViewController.getDiyNode(element);
+      }
+      else if (element.nodeType == TreeNodeType.Bricks_NeedReview_Day) {
+        return await bricksViewController.getNeedReviewNodesByDay(element);
+      }
+      return [];
     }
   }
 
@@ -107,9 +105,9 @@ export class BricksDataService implements TreeDataProvider<TreeNodeModel> {
     }
   }
 
-  public async setBricksType(node: TreeNodeModel, type) {
+  public async setBricksType(node: TreeNodeModel, type: BricksType) {
     let qid: string = node.qid.toString();
-    bricksDao.setTypeByQid(qid, type);
+    await bricksDao.setReviewDayByQidAndType(qid, type);
     BABA.sendNotification(BabaStr.BricksData_setBricksTypeFinish);
   }
 
