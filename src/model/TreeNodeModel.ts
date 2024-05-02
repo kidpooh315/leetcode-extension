@@ -258,7 +258,12 @@ export class TreeNodeModel {
     );
   }
 
-  // rank分
+  public get viewItem(): string {
+    if (this.isProblem) {
+      return `leaf#${this.nodeType}#`
+    }
+    return `cc#${this.nodeType}#`
+  }  // rank分
   public get score(): string {
     return BABA.getProxy(BabaStr.RankScoreDataProxy).getDataByFid(this.fid)?.score || "0";
   }

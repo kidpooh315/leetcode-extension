@@ -43,12 +43,6 @@ export class BricksDataService implements TreeDataProvider<TreeNodeModel> {
         },
       };
     }
-    let contextValue: string;
-    if (element.isProblem) {
-      contextValue = element.groupTime ? "nodebricksdiy" : "nodebricks";
-    } else {
-      contextValue = element.id.toLowerCase();
-    }
 
     const result: TreeItem | Thenable<TreeItem> = {
       label: element.isProblem
@@ -59,7 +53,7 @@ export class BricksDataService implements TreeDataProvider<TreeNodeModel> {
       iconPath: this.parseIconPathFromProblemState(element),
       command: element.isProblem ? element.previewCommand : undefined,
       resourceUri: element.uri,
-      contextValue,
+      contextValue: element.viewItem,
     };
     return result;
   }

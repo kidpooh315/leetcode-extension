@@ -66,13 +66,6 @@ export class TreeDataService implements vscode.TreeDataProvider<TreeNodeModel> {
       };
     }
 
-    let contextValue: string;
-    if (element.isProblem) {
-      contextValue = element.isFavorite ? "problem-favorite" : "problem";
-    } else {
-      contextValue = element.id.toLowerCase();
-    }
-
     const result: vscode.TreeItem | Thenable<vscode.TreeItem> = {
       label: element.isProblem
         ? (element.score > "0" ? "[score:" + element.score + "]" : "") + `ID:${element.id}.${element.name} `
@@ -84,7 +77,7 @@ export class TreeDataService implements vscode.TreeDataProvider<TreeNodeModel> {
       iconPath: this.parseIconPathFromProblemState(element),
       command: element.isProblem ? element.previewCommand : undefined,
       resourceUri: element.uri,
-      contextValue,
+      contextValue: element.viewItem,
     };
     return result;
   }

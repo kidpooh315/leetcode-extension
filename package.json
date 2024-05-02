@@ -2,7 +2,7 @@
     "name": "vscode-leetcode-problem-rating",
     "displayName": "LeetCode",
     "description": "%main.description%",
-    "version": "3.1.22",
+    "version": "3.1.23",
     "author": "ccagml",
     "publisher": "ccagml",
     "license": "MIT",
@@ -404,87 +404,87 @@
             "view/item/context": [
                 {
                     "command": "lcpr.previewProblem",
-                    "when": "view == QuestionExplorer && viewItem =~ /problem*/",
+                    "when": "view == QuestionExplorer && viewItem =~ /leaf*/",
                     "group": "leetcode@1"
                 },
                 {
                     "command": "lcpr.showProblem",
-                    "when": "view == QuestionExplorer && viewItem =~ /problem*/",
+                    "when": "view == QuestionExplorer && viewItem =~ /leaf*/",
                     "group": "leetcode@2"
                 },
                 {
                     "command": "lcpr.getHelp",
-                    "when": "view == QuestionExplorer && viewItem =~ /problem*/",
+                    "when": "view == QuestionExplorer && viewItem =~ /leaf*/",
                     "group": "leetcode@3"
                 },
                 {
                     "submenu": "lcpr.setBricksType_sub",
-                    "when": "view == QuestionExplorer && viewItem =~ /problem*/",
+                    "when": "view == QuestionExplorer && viewItem =~ /leaf*/",
                     "group": "leetcode@4"
                 },
                 {
                     "command": "lcpr.addQidToGroup",
-                    "when": "view == QuestionExplorer && viewItem =~ /problem*/",
+                    "when": "view == QuestionExplorer && viewItem =~ /leaf*/",
                     "group": "leetcode@5"
                 },
                 {
                     "command": "lcpr.addFavorite",
-                    "when": "view == QuestionExplorer && viewItem == problem",
+                    "when": "view == QuestionExplorer && viewItem =~ /leaf*/ && viewItem != leaf#10511#",
                     "group": "inline"
                 },
                 {
                     "command": "lcpr.removeFavorite",
-                    "when": "view == QuestionExplorer && viewItem == problem-favorite",
+                    "when": "view == QuestionExplorer && viewItem == leaf#10511#",
                     "group": "inline"
                 },
                 {
                     "command": "lcpr.previewProblem",
-                    "when": "view == BricksExplorer && viewItem  =~ /nodebricks*/",
+                    "when": "view == BricksExplorer && viewItem  =~ /leaf*/",
                     "group": "leetcode@1"
                 },
                 {
                     "command": "lcpr.showProblem",
-                    "when": "view == BricksExplorer && viewItem =~ /nodebricks*/",
+                    "when": "view == BricksExplorer && viewItem =~ /leaf*/",
                     "group": "leetcode@2"
                 },
                 {
                     "command": "lcpr.getHelp",
-                    "when": "view == BricksExplorer && viewItem  =~ /nodebricks*/",
+                    "when": "view == BricksExplorer && viewItem  =~ /leaf*/",
                     "group": "leetcode@3"
                 },
                 {
                     "submenu": "lcpr.setBricksType_sub1",
-                    "when": "view == BricksExplorer && viewItem =~ /nodebricks*/ ",
+                    "when": "view == BricksExplorer && viewItem =~ /leaf*/ ",
                     "group": "leetcode@4"
                 },
                 {
                     "command": "lcpr.addQidToGroup",
-                    "when": "view == BricksExplorer && viewItem != nodebricksdiy && viewItem != bricksneedredate && viewItem != bricksneedreview && viewItem != brickstodaysubmit && viewItem != bricksdiy",
+                    "when": "view == BricksExplorer && viewItem =~ /leaf*/ ",
                     "group": "leetcode@5"
                 },
                 {
                     "command": "lcpr.removeBricksHave",
-                    "when": "view == BricksExplorer && viewItem == bricksneedreview",
+                    "when": "view == BricksExplorer && viewItem == cc#20100#",
                     "group": "leetcode@5"
                 },
                 {
                     "command": "lcpr.removeQidFromGroup",
-                    "when": "view == BricksExplorer && viewItem == nodebricksdiy",
+                    "when": "view == BricksExplorer && viewItem == leaf#20401#",
                     "group": "leetcode@5"
                 },
                 {
                     "command": "lcpr.removeBrickGroup",
-                    "when": "view == BricksExplorer && viewItem == bricksdiy",
+                    "when": "view == BricksExplorer && viewItem == cc#20400#",
                     "group": "leetcode@1"
                 },
                 {
                     "command": "lcpr.removeBricksNeedReviewDay",
-                    "when": "view == BricksExplorer && viewItem == bricksneedredate",
+                    "when": "view == BricksExplorer && viewItem == cc#20110#",
                     "group": "leetcode@1"
                 },
                 {
                     "command": "lcpr.removeBricksNeedReviewDayNode",
-                    "when": "view == BricksExplorer && viewItem == bricksneedreview",
+                    "when": "view == BricksExplorer && viewItem == leaf#20111#",
                     "group": "leetcode@1"
                 }
             ],
