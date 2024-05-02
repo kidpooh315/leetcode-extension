@@ -173,6 +173,13 @@ export async function activate(context: ExtensionContext): Promise<void> {
       commands.registerCommand("lcpr.removeBrickGroup", (a) =>
         BABA.sendNotification(BabaStr.BABACMD_removeBrickGroup, a)
       ),
+      commands.registerCommand("lcpr.removeBricksNeedReviewDay", (a) =>
+        BABA.sendNotification(BabaStr.BABACMD_removeBricksNeedReviewDay, a)
+      ),
+      commands.registerCommand("lcpr.removeBricksNeedReviewDayNode", (a) =>
+        BABA.sendNotification(BabaStr.BABACMD_removeBricksNeedReviewDayNode, a)
+      ),
+
       commands.registerCommand("lcpr.removeBricksHave", (a) =>
         BABA.sendNotification(BabaStr.BABACMD_removeBricksHave, a)
       ),

@@ -10,9 +10,9 @@
 // import * as os from "os";
 import * as path from "path";
 import * as vscode from "vscode";
-import { Category, ProblemState, SearchSetType, OutPutType, Endpoint, IQuickItemEx } from "../model/ConstDefind";
+import { Category, ProblemState, SearchSetType, OutPutType, Endpoint, IQuickItemEx, BricksNormalId } from "../model/ConstDefind";
 import { treeViewController } from "../controller/TreeViewController";
-import { TreeNodeModel, TreeNodeType } from "../model/TreeNodeModel";
+import { CreateTreeNodeModel, TreeNodeModel, TreeNodeType } from "../model/TreeNodeModel";
 import { choiceDao } from "../dao/choiceDao";
 import { tagsDao } from "../dao/tagsDao";
 import { ShowMessage, promptForSignIn } from "../utils/OutputUtils";
@@ -55,7 +55,7 @@ export class TreeDataService implements vscode.TreeDataProvider<TreeNodeModel> {
   }
 
   public getTreeItem(element: TreeNodeModel): vscode.TreeItem | Thenable<vscode.TreeItem> {
-    if (element.id === "notSignIn") {
+    if (element.id === BricksNormalId.NotSignIn) {
       return {
         label: element.name,
         collapsibleState: vscode.TreeItemCollapsibleState.None,
@@ -64,13 +64,6 @@ export class TreeDataService implements vscode.TreeDataProvider<TreeNodeModel> {
           title: "未登录",
         },
       };
-    }
-
-    let contextValue: string;
-    if (element.isProblem) {
-      contextValue = element.isFavorite ? "problem-favorite" : "problem";
-    } else {
-      contextValue = element.id.toLowerCase();
     }
 
     const result: vscode.TreeItem | Thenable<vscode.TreeItem> = {
@@ -84,7 +77,7 @@ export class TreeDataService implements vscode.TreeDataProvider<TreeNodeModel> {
       iconPath: this.parseIconPathFromProblemState(element),
       command: element.isProblem ? element.previewCommand : undefined,
       resourceUri: element.uri,
-      contextValue,
+      contextValue: element.viewItem,
     };
     return result;
   }
@@ -92,12 +85,12 @@ export class TreeDataService implements vscode.TreeDataProvider<TreeNodeModel> {
   public getChildren(element?: TreeNodeModel | undefined): vscode.ProviderResult<TreeNodeModel[]> {
     if (!BABA.getProxy(BabaStr.StatusBarProxy).getUser()) {
       return [
-        new TreeNodeModel(
+        CreateTreeNodeModel(
           {
-            id: "notSignIn",
+            id: BricksNormalId.NotSignIn,
             name: "未登录",
           },
-          TreeNodeType.TreeDataNormal
+          TreeNodeType.TreeNotSignIn
         ),
       ];
     }
@@ -105,49 +98,44 @@ export class TreeDataService implements vscode.TreeDataProvider<TreeNodeModel> {
       // Root view
       return treeViewController.getRootNodes();
     } else {
-      if (element.nodeType == TreeNodeType.TreeDataDay) {
+      if (element.nodeType == TreeNodeType.Tree_day) {
         return treeViewController.getDayNodes(element);
-      } else if (element.isSearchResult) {
-        switch (element.id) {
-          case SearchSetType.ScoreRange:
-            return treeViewController.getScoreRangeNodes(element.input);
-            break;
-          case SearchSetType.Context:
-            return treeViewController.getContextNodes(element.input);
-            break;
-          case SearchSetType.Day:
-            return treeViewController.getDayNodes(element);
-            break;
-          default:
-            break;
+      }
+      else if (element.nodeType == TreeNodeType.Tree_search) {
+        if (element.id == SearchSetType.ScoreRange) {
+          return treeViewController.getScoreRangeNodes(element.input);
+        }
+        else if (element.id == SearchSetType.Context) {
+          return treeViewController.getContestNodes(element.input);
         }
         return [];
-      } else {
-        switch (
-        element.id // First-level
-        ) {
-          case Category.All:
-            return treeViewController.getAllNodes();
-          case Category.Favorite:
-            return treeViewController.getFavoriteNodes();
-          case Category.Difficulty:
-            return treeViewController.getAllDifficultyNodes();
-          case Category.Tag:
-            return treeViewController.getAllTagNodes();
-          case Category.Company:
-            return treeViewController.getAllCompanyNodes();
-          case Category.Score:
-            return treeViewController.getAllScoreNodes();
-          case Category.Choice:
-            return treeViewController.getAllChoiceNodes();
-          case Category.Contest:
-            return treeViewController.getAllContestNodes();
-          default:
-            if (element.isProblem) {
-              return [];
-            }
-            return treeViewController.getChildrenNodesById(element.id);
+      }
+      else if (element.nodeType == TreeNodeType.Tree_All) {
+        return treeViewController.getAllNodes();
+      }
+      else if (element.nodeType == TreeNodeType.Tree_favorite) {
+        return treeViewController.getFavoriteNodes();
+      }
+      else if (element.nodeType == TreeNodeType.Tree_difficulty) {
+        return treeViewController.getDifficultyChild()
+      }
+      else if (element.nodeType == TreeNodeType.Tree_tag) {
+        return treeViewController.getTagChild()
+      }
+      else if (element.nodeType == TreeNodeType.Tree_score) {
+        return treeViewController.getScoreChild();
+      }
+      else if (element.nodeType == TreeNodeType.Tree_choice) {
+        return treeViewController.getChoiceChild();
+      }
+      else if (element.nodeType == TreeNodeType.Tree_contest) {
+        return treeViewController.getContestChild();
+      }
+      else {
+        if (element.isProblem) {
+          return [];
         }
+        return treeViewController.getChildrenSon(element);
       }
     }
   }

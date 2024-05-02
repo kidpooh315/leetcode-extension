@@ -135,7 +135,7 @@ export enum RootNodeSort {
   Choice = 7,
   Score = 8,
   ScoreRange = 9,
-  Context = 9,
+  Contest = 9,
   DIFEASY = 1,
   DIFMID = 2,
   DIFHARD = 3,
@@ -156,23 +156,25 @@ export interface IScoreData {
 }
 
 export enum BricksNormalId {
-  Have = "bricksHave", // 有活
-  HaveDesc = "别吹牛了,工头让我叫你快去搬砖了",
-  No = "bricksNo", // 没活
-  NoDesc = "工头让你去上面那个工地,过几天再回来",
-  Today = "bricksToday",
-  DIY = "bricksDiy",
+  NeedReview = "bricksneedreview", // 有活需要复习
+  NeedReviewDesc = "别吹牛了,工头让我叫你快去搬砖了",
+  NeedReDate = "bricksneedRedate", // 复习的日期节点
+  NoReview = "bricksnoreview", // 没活
+  NoReviewDesc = "工头让你去上面那个工地,过几天再回来",
+  TodaySubmit = "brickstodaysubmit",
+  DIY = "bricksdiy",
+  NotSignIn = "notsignin" // 没登录
 }
 
+// 类型默认天数
 export enum BricksType {
-  TYPE_0 = 0,
-  TYPE_1 = 1,
-  TYPE_2 = 2,
-  TYPE_3 = 3,
-  TYPE_4 = 4,
-  TYPE_5 = 5,
-  TYPE_6 = 6,
-  TYPE_7 = 7,
+  TYPE_0 = 1,
+  TYPE_1 = 2,
+  TYPE_2 = 4,
+  TYPE_3 = 7,
+  TYPE_4 = 14,
+  TYPE_5 = 28,
+  TYPE_6 = 60,
 }
 
 export enum BricksTypeName {
@@ -183,7 +185,6 @@ export enum BricksTypeName {
   TYPE_4 = "3天",
   TYPE_5 = "2天",
   TYPE_6 = "1天",
-  TYPE_7 = "999天",
 }
 
 export enum Category {

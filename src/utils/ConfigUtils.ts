@@ -545,3 +545,10 @@ export function getOpenClearProblemCacheTime(): number {
 export function isOpenClearProblemCache(): boolean {
   return getVsCodeConfig().get<boolean>("openClearProblemCache", false);
 }
+
+// 获取
+export function getbricksReviewDay() {
+  const shortcuts: number[] = getVsCodeConfig().get<number[]>("bricksReviewDay", [1, 4, 7, 14, 28, 60]);
+  return shortcuts
+}
+
