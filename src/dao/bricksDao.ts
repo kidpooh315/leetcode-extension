@@ -269,6 +269,38 @@ class BricksDao {
     await this._write_data(all_data);
   }
 
+  // 清空日期
+  public async removeBricksNeedReviewDay(review_time: number) {
+    let all_data = await this._read_data();
+    let temp = all_data.all_bricks || {};
+
+    for (const qid in temp) {
+      if (temp[qid].review_day != undefined && temp[qid].review_day.includes(review_time)) {
+        let new_review_day = temp[qid].review_day.filter((p) => { p != review_time })
+        temp[qid].review_day = new_review_day
+      }
+    }
+
+    all_data.all_bricks = temp;
+    await this._write_data(all_data);
+  }
+
+  // 清空日期下的点
+  public async removeBricksNeedReviewDayNode(review_time: number, qid) {
+    let all_data = await this._read_data();
+    let temp = all_data.all_bricks || {};
+
+    if (temp[qid] != undefined) {
+      if (temp[qid].review_day != undefined && temp[qid].review_day.includes(review_time)) {
+        let new_review_day = temp[qid].review_day.filter((p) => { p != review_time })
+        temp[qid].review_day = new_review_day
+      }
+    }
+
+    all_data.all_bricks = temp;
+    await this._write_data(all_data);
+  }
+
   // 设置其提交时间 和 复习时间
   public async addSubmitTimeByQid(qid: string) {
     let temp_data = await this.getInfoByQid(qid);

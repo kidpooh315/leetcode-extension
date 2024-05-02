@@ -32,7 +32,7 @@ class BricksViewController implements Disposable {
           let new_obj = CreateTreeNodeModel(
             Object.assign({}, node.get_data(), {
               collapsibleState: TreeItemCollapsibleState.None,
-              groupTime: 0,
+              groupTime: groupTime,
             }),
             TreeNodeType.Bricks_NeedReview_Day_leaf
           );
@@ -241,6 +241,17 @@ class BricksViewController implements Disposable {
 
   public async removeQidFromGroup(node) {
     groupDao.removeQidFromTime(node.qid, node.groupTime);
+    BABA.sendNotification(BabaStr.BricksData_removeQidFromGroupFinish);
+  }
+
+  // 移除某个日期
+  public async removeBricksNeedReviewDay(node) {
+    bricksDao.removeBricksNeedReviewDay(node.groupTime);
+    BABA.sendNotification(BabaStr.BricksData_removeQidFromGroupFinish);
+  }
+  // 移除某个日期的某一题
+  public async removeBricksNeedReviewDayNode(node) {
+    bricksDao.removeBricksNeedReviewDayNode(node.groupTime, node.qid);
     BABA.sendNotification(BabaStr.BricksData_removeQidFromGroupFinish);
   }
 

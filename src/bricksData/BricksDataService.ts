@@ -198,6 +198,8 @@ export class BricksDataMediator extends BABAMediator {
       BabaStr.CommitResult_showFinish,
       BabaStr.BricksData_removeBricksHaveFinish,
       BabaStr.BABACMD_removeBricksHave,
+      BabaStr.BABACMD_removeBricksNeedReviewDay,
+      BabaStr.BABACMD_removeBricksNeedReviewDayNode
     ];
   }
   async handleNotification(_notification: BaseCC.BaseCC.INotification) {
@@ -248,6 +250,12 @@ export class BricksDataMediator extends BABAMediator {
         break;
       case BabaStr.BABACMD_removeBricksHave:
         bricksViewController.removeBricksHave();
+        break;
+      case BabaStr.BABACMD_removeBricksNeedReviewDay:
+        bricksViewController.removeBricksNeedReviewDay(body);
+        break;
+      case BabaStr.BABACMD_removeBricksNeedReviewDayNode:
+        bricksViewController.removeBricksNeedReviewDayNode(body);
         break;
       default:
         break;
