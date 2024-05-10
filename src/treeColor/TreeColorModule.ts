@@ -18,6 +18,8 @@ import {
   WorkspaceConfiguration,
 } from "vscode";
 import { BABA, BabaStr } from "../BABA";
+import { is_problem_by_nodeType, TreeNodeType } from "../model/TreeNodeModel";
+import { getDayNow, getYMD } from "../utils/SystemUtils";
 
 export class TreeColor implements FileDecorationProvider {
   private readonly ITEM_COLOR: { [key: string]: ThemeColor } = {
@@ -37,10 +39,38 @@ export class TreeColor implements FileDecorationProvider {
       return;
     }
 
-    if (uri.authority !== "problems") {
-      return;
+    // 不是插件的上色点
+    if (uri.scheme !== "lcpr") {
+      return
+    }
+    if (is_problem_by_nodeType(uri.authority)) {
+      return this.leafColor(uri);
     }
 
+    // 看是不是日期节点
+    if (Number(uri.authority) == TreeNodeType.Bricks_NeedReview_Day) {
+      return this.NeedReview_Day_Color(uri)
+    }
+    return;
+  }
+  // 复习过期颜色
+  private NeedReview_Day_Color(uri: Uri): ProviderResult<FileDecoration> {
+    const params: URLSearchParams = new URLSearchParams(uri.query);
+    const groupTimeStr: string = params.get("groupTime") || "0";
+    const groupTime = Number(groupTimeStr)
+
+    const file_color: FileDecoration = {};
+    if (groupTime > 0) {
+      let cur_time = getDayNow()
+      if (cur_time > (groupTime + 86400)) {
+        file_color.color = this.ITEM_COLOR.red;
+        file_color.tooltip = `已过期${getYMD(groupTime)}`;
+      }
+    }
+    return file_color;
+  }
+  // 叶子的颜色既问题难度分的颜色
+  private leafColor(uri: Uri): ProviderResult<FileDecoration> {
     const params: URLSearchParams = new URLSearchParams(uri.query);
     // const difficulty: string = params.get("difficulty")!.toLowerCase();
     const score: string = params.get("score") || "0";
