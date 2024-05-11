@@ -616,8 +616,14 @@ class TreeViewController implements Disposable {
       picks.push(pick_item);
     }
 
+    const user_score = BABA.getProxy(BabaStr.StatusBarProxy).getUserContestScore() || 0;
+    let min_score: number = getPickOneByRankRangeMin();
+    let max_score: number = getPickOneByRankRangeMax();
+    const need_min = user_score + min_score;
+    const need_max = user_score + max_score;
+
     const choice: Array<IQuickItemEx<string>> | undefined = await window.showQuickPick(picks, {
-      title: "指定Tag类型",
+      title: user_score > 0 ? `手气一下,score:[${Math.ceil(need_min)} - ${Math.floor(need_max)}]` : "手气一下",
       matchOnDescription: false,
       matchOnDetail: false,
       placeHolder: "指定Tag类型",
@@ -636,13 +642,9 @@ class TreeViewController implements Disposable {
     const problems: TreeNodeModel[] = await BABA.getProxy(BabaStr.QuestionDataProxy).getfidMapQuestionData();
     let randomProblem: TreeNodeModel;
 
-    const user_score = BABA.getProxy(BabaStr.StatusBarProxy).getUserContestScore();
+
     if (user_score > 0) {
-      let min_score: number = getPickOneByRankRangeMin();
-      let max_score: number = getPickOneByRankRangeMax();
       let temp_problems: TreeNodeModel[] = [];
-      const need_min = user_score + min_score;
-      const need_max = user_score + max_score;
       problems.forEach((element) => {
         if (BABA.getProxy(BabaStr.RankScoreDataProxy).getDataByFid(element.id)?.Rating) {
           if (

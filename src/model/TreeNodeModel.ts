@@ -146,6 +146,32 @@ export enum TreeNodeType {
 
 }
 
+
+export function is_problem_by_nodeType(nt) {
+  let nodeType = Number(nt)
+  return (
+    nodeType == TreeNodeType.Tree_search_score_leaf ||
+    nodeType == TreeNodeType.Tree_search_contest_leaf ||
+    nodeType == TreeNodeType.Tree_day_leaf ||
+    nodeType == TreeNodeType.Tree_All_leaf ||
+    nodeType == TreeNodeType.Tree_difficulty_easy_leaf ||
+    nodeType == TreeNodeType.Tree_difficulty_mid_leaf ||
+    nodeType == TreeNodeType.Tree_difficulty_hard_leaf ||
+    nodeType == TreeNodeType.Tree_tag_fenlei_leaf ||
+    nodeType == TreeNodeType.Tree_favorite_leaf ||
+    nodeType == TreeNodeType.Tree_choice_fenlei_leaf ||
+    nodeType == TreeNodeType.Tree_score_fen_leaf ||
+    nodeType == TreeNodeType.Tree_contest_Q1_leaf ||
+    nodeType == TreeNodeType.Tree_contest_Q2_leaf ||
+    nodeType == TreeNodeType.Tree_contest_Q3_leaf ||
+    nodeType == TreeNodeType.Tree_contest_Q4_leaf ||
+    nodeType == TreeNodeType.Bricks_NeedReview_Day_leaf ||
+    nodeType == TreeNodeType.Bricks_TodaySubmit_leaf ||
+    nodeType == TreeNodeType.Bricks_Diy_leaf
+  );
+
+}
+
 export function CreateTreeNodeModel(data: ITreeDataNormal | ITreeDataSearch | ITreeDataDay | IQuestionData | IBricksToday, nodeType: TreeNodeType): TreeNodeModel {
   return new TreeNodeModel(data, nodeType);
 }
@@ -235,27 +261,7 @@ export class TreeNodeModel {
   }
 
   public get isProblem(): boolean {
-    return (
-      this.nodeType == TreeNodeType.Tree_search_score_leaf ||
-      this.nodeType == TreeNodeType.Tree_search_contest_leaf ||
-      this.nodeType == TreeNodeType.Tree_day_leaf ||
-      this.nodeType == TreeNodeType.Tree_All_leaf ||
-      this.nodeType == TreeNodeType.Tree_difficulty_easy_leaf ||
-      this.nodeType == TreeNodeType.Tree_difficulty_mid_leaf ||
-      this.nodeType == TreeNodeType.Tree_difficulty_hard_leaf ||
-      this.nodeType == TreeNodeType.Tree_tag_fenlei_leaf ||
-      this.nodeType == TreeNodeType.Tree_favorite_leaf ||
-      this.nodeType == TreeNodeType.Tree_choice_fenlei_leaf ||
-      this.nodeType == TreeNodeType.Tree_score_fen_leaf ||
-      this.nodeType == TreeNodeType.Tree_contest_Q1_leaf ||
-      this.nodeType == TreeNodeType.Tree_contest_Q2_leaf ||
-      this.nodeType == TreeNodeType.Tree_contest_Q3_leaf ||
-      this.nodeType == TreeNodeType.Tree_contest_Q4_leaf ||
-      this.nodeType == TreeNodeType.Bricks_NeedReview_Day_leaf ||
-      this.nodeType == TreeNodeType.Bricks_TodaySubmit_leaf ||
-      this.nodeType == TreeNodeType.Bricks_Diy_leaf
-
-    );
+    return is_problem_by_nodeType(this.nodeType)
   }
 
   public get viewItem(): string {
@@ -310,12 +316,23 @@ export class TreeNodeModel {
     };
   }
 
-  public get uri(): Uri {
+  public nodeUri_Query() {
+    if (this.isProblem) {
+      return `nodeType=${this.nodeType}&difficulty=${this.difficulty}&score=${this.score}`
+    }
+    return `nodeType=${this.nodeType}&groupTime=${this.groupTime || 0}`;
+  }
+
+  public get TNMUri(): Uri {
+
+    // scheme://authority/path?query#fragment
+
     return Uri.from({
-      scheme: "leetcode",
-      authority: this.isProblem ? "problems" : "tree-node",
+      scheme: "lcpr",
+      authority: `${this.nodeType}`,
       path: `/${this.id}`, // path must begin with slash /
-      query: `difficulty=${this.difficulty}&score=${this.score}&user_score=0`,
+      query: this.nodeUri_Query(),
+      fragment: this.viewItem
     });
   }
 }

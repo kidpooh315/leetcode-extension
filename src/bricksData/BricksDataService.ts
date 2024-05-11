@@ -52,7 +52,7 @@ export class BricksDataService implements TreeDataProvider<TreeNodeModel> {
       collapsibleState: element.collapsibleState || TreeItemCollapsibleState.None,
       iconPath: this.parseIconPathFromProblemState(element),
       command: element.isProblem ? element.previewCommand : undefined,
-      resourceUri: element.uri,
+      resourceUri: element.TNMUri,
       contextValue: element.viewItem,
     };
     return result;
