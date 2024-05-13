@@ -1,3 +1,7 @@
+## version 3.2.3
+
+- 配置 filePath 增加文件名 ${score} 获取题目的分数
+
 # version 3.2.2
 
 - 手气一下显示分数范围

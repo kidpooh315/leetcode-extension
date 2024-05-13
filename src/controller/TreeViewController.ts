@@ -895,6 +895,8 @@ class TreeViewController implements Disposable {
           return getyyyymmdd(undefined);
         case "timestamp":
           return getDayNowStr();
+        case "score":
+          return node.score;
         default:
           errorMsg = `The config '${placeholder}' is not supported.`;
           BABA.getProxy(BabaStr.LogOutputProxy).get_log().appendLine(errorMsg);
