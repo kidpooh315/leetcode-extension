@@ -76,7 +76,7 @@ export class TreeDataService implements vscode.TreeDataProvider<TreeNodeModel> {
         : vscode.TreeItemCollapsibleState.Collapsed,
       iconPath: this.parseIconPathFromProblemState(element),
       command: element.isProblem ? element.previewCommand : undefined,
-      resourceUri: element.uri,
+      resourceUri: element.TNMUri,
       contextValue: element.viewItem,
     };
     return result;
