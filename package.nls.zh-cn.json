@@ -104,7 +104,8 @@
     "main.contributes.configuration.properties.leetcode-problem-rating.openClearProblemCacheTime.description": "打开拓展时清除缓存间隔默认3600秒",
     "main.contributes.configuration.properties.leetcode-problem-rating.cppCompiler.enumDescriptions": [
         "gdb compiler",
-        "clang compiler"
+        "clang compiler",
+        "msvc compiler"
     ],
     "main.contributes.configuration.properties.leetcode-problem-rating.problems.sortStrategy.enumDescriptions.0": "默认题目编号排序",
     "main.contributes.configuration.properties.leetcode-problem-rating.problems.sortStrategy.enumDescriptions.1": "通过率升序",
@@ -126,5 +127,6 @@
     "main.contributes.configuration.properties.leetcode-problem-rating.hideScore.enumDescriptions.2": "隐藏没有分数的题目",
     "main.contributes.configuration.properties.leetcode-problem-rating.hideScore.enumDescriptions.3": "隐藏分数在配置[pickOneByRankRangeMin, pickOneByRankRangeMax]范围外的题目",
     "main.contributes.configuration.properties.leetcode-problem-rating.cppCompiler.enumDescriptions.0": "gdb编译",
-    "main.contributes.configuration.properties.leetcode-problem-rating.cppCompiler.enumDescriptions.1": "clang编译"
+    "main.contributes.configuration.properties.leetcode-problem-rating.cppCompiler.enumDescriptions.1": "clang编译",
+    "main.contributes.configuration.properties.leetcode-problem-rating.cppCompiler.enumDescriptions.2": "msvc编译",
 }
