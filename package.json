@@ -1196,11 +1196,13 @@
                         "default": "gdb",
                         "enum": [
                             "gdb",
-                            "clang"
+                            "clang",
+                            "msvc"
                         ],
                         "enumDescriptions": [
                             "%main.contributes.configuration.properties.leetcode-problem-rating.cppCompiler.enumDescriptions.0%",
-                            "%main.contributes.configuration.properties.leetcode-problem-rating.cppCompiler.enumDescriptions.1%"
+                            "%main.contributes.configuration.properties.leetcode-problem-rating.cppCompiler.enumDescriptions.1%",
+                            "%main.contributes.configuration.properties.leetcode-problem-rating.cppCompiler.enumDescriptions.2%"
                         ],
                         "scope": "resource"
                     }
