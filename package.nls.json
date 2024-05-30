@@ -104,7 +104,8 @@
     "main.contributes.configuration.properties.leetcode-problem-rating.openClearProblemCacheTime.description": "Open the app to clear the cache interval by default 3600 seconds",
     "main.contributes.configuration.properties.leetcode-problem-rating.cppCompiler.enumDescriptions": [
         "gdb compiler",
-        "clang compiler"
+        "clang compiler",
+        "msvc compiler"
     ],
     "main.contributes.configuration.properties.leetcode-problem-rating.problems.sortStrategy.enumDescriptions.0": "None",
     "main.contributes.configuration.properties.leetcode-problem-rating.problems.sortStrategy.enumDescriptions.1": "Acceptance Rate (Ascending)",
@@ -126,5 +127,6 @@
     "main.contributes.configuration.properties.leetcode-problem-rating.hideScore.enumDescriptions.2": "Hide questions with no scores",
     "main.contributes.configuration.properties.leetcode-problem-rating.hideScore.enumDescriptions.3": "Hide questions outside the range of scores [pickOneByRankRangeMin, pickOneByRankRangeMax]",
     "main.contributes.configuration.properties.leetcode-problem-rating.cppCompiler.enumDescriptions.0": "gdb compiler",
-    "main.contributes.configuration.properties.leetcode-problem-rating.cppCompiler.enumDescriptions.1": "clang compiler"
+    "main.contributes.configuration.properties.leetcode-problem-rating.cppCompiler.enumDescriptions.1": "clang compiler",
+    "main.contributes.configuration.properties.leetcode-problem-rating.cppCompiler.enumDescriptions.2": "msvc compiler"
 }

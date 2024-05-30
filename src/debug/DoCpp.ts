@@ -36,9 +36,13 @@ function getGdbDefaultConfig(): IDebugConfig {
 
 function getClangDefaultConfig(): IDebugConfig {
   return {
-    type: "cppdbg",
-    MIMode: "lldb",
-    externalConsole: false,
+    type: "lldb",
+  };
+}
+
+function getMSVCDefaultConfig(): IDebugConfig {
+  return {
+    type: "cppvsdbg",
   };
 }
 
@@ -240,28 +244,44 @@ export class DebugCpp {
 
     const compiler = vscode.workspace.getConfiguration("leetcode-problem-rating").get<string>("cppCompiler") ?? "gdb";
     let debugConfig: any;
-    if (compiler === "clang") {
-      debugConfig = await this.getClangDebugConfig({
-        program,
-        exePath,
-        commonDestPath,
-        jsonPath,
-        thirdPartyPath,
-        filePath,
-        newSourceFilePath,
-      });
-    } else {
-      debugConfig = await this.getGdbDebugConfig({
-        program,
-        exePath,
-        commonDestPath,
-        jsonPath,
-        thirdPartyPath,
-        filePath,
-        newSourceFilePath,
-      });
-    }
-
+      switch (compiler) {
+        case "clang": {
+          debugConfig = await this.getClangDebugConfig({
+            program,
+            exePath,
+            commonDestPath,
+            jsonPath,
+            thirdPartyPath,
+            filePath,
+            newSourceFilePath,
+          });
+          break;
+        }
+        case "gdb": {
+          debugConfig = await this.getGdbDebugConfig({
+            program,
+            exePath,
+            commonDestPath,
+            jsonPath,
+            thirdPartyPath,
+            filePath,
+            newSourceFilePath,
+          });
+          break;
+        }
+        case "msvc": {
+          debugConfig = await this.getMSVCDebugConfig({
+            program,
+            exePath,
+            commonDestPath,
+            jsonPath,
+            thirdPartyPath,
+            filePath,
+            newSourceFilePath,
+          });
+          break;
+        }
+      }
     if (debugConfig == null) {
       return;
     }
@@ -398,7 +418,7 @@ export class DebugCpp {
       const includePath: string = path.dirname(exePath);
       await sysCall(
         "g++",
-        ["-g", program, commonDestPath, jsonPath, "-o", exePath, "-I", includePath, "-I", thirdPartyPath],
+        ["-std=c++20","-g", program, commonDestPath, jsonPath, "-o", exePath, "-I", includePath, "-I", thirdPartyPath],
         { shell: false }
       );
     } catch (e) {
@@ -438,7 +458,7 @@ export class DebugCpp {
     try {
       const includePath: string = path.dirname(exePath);
       await sysCall(
-        "/usr/bin/clang++",
+        "clang++",
         [
           "-std=c++20",
           "-stdlib=libc++",
@@ -452,6 +472,59 @@ export class DebugCpp {
           includePath,
           "-I",
           thirdPartyPath,
+        ],
+        { shell: false }
+      );
+    } catch (e) {
+      ShowMessage(e, OutPutType.error);
+      BABA.getProxy(BabaStr.LogOutputProxy).get_log().append(e.stack);
+      BABA.getProxy(BabaStr.LogOutputProxy).get_log().show();
+      return;
+    }
+
+    debugConfig.program = exePath;
+    debugConfig.cwd = extensionState.cachePath;
+    // map build source file to user source file
+    debugConfig.sourceFileMap = {
+      [newSourceFilePath]: filePath,
+    };
+    return debugConfig;
+  }
+
+  private async getMSVCDebugConfig({
+    program,
+    exePath,
+    commonDestPath,
+    jsonPath,
+    thirdPartyPath,
+    filePath,
+    newSourceFilePath,
+  }: {
+    program: string;
+    exePath: string;
+    commonDestPath: string;
+    jsonPath: string;
+    thirdPartyPath: string;
+    filePath: string;
+    newSourceFilePath: string;
+  }) {
+    const debugConfig = getMSVCDefaultConfig();
+    try {
+      const includePath: string = path.dirname(exePath);
+      await sysCall(
+        "cl",
+        [
+            "-std:c++20",
+            "-Zi",
+            "-EHsc",
+            program,
+            commonDestPath,
+            jsonPath,
+            `-Fe${exePath}`,
+            "-I",
+            includePath,
+            "-I",
+            thirdPartyPath,
         ],
         { shell: false }
       );

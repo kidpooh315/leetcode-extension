@@ -1,3 +1,7 @@
+# version 3.2.3
+
+- 添加 msvc 支持，使用 path 中的 clang，gcc 使用 c++20 标准
+
 # version 3.2.2
 
 - 手气一下显示分数范围
