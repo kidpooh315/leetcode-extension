@@ -794,6 +794,7 @@ class TreeViewController implements Disposable {
     BABA.sendNotification(BabaStr.TreeData_searchContest);
   }
 
+  // TODO
   public async searchUserContest(): Promise<void> {
     let sbp = BABA.getProxy(BabaStr.StatusBarProxy);
     if (!sbp.getUser()) {
