@@ -1,3 +1,8 @@
+# version 3.2.4
+
+- 更新 hot100 题目编号
+- 更新基础的题目分数数据 resources/data.json
+
 # version 3.2.3
 
 - 添加 msvc 支持，使用 path 中的 clang，gcc 使用 c++20 标准
