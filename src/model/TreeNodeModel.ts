@@ -71,6 +71,15 @@ export interface ITodayDataResponse {
   time: number;
 }
 
+// 竞赛的数据
+export interface IContestData {
+  index: number;
+  title: string;
+  titleSlug: string;
+  startTime: number;
+  duration: number;
+}
+
 export enum TreeNodeType {
 
   // 功能节点
@@ -127,6 +136,9 @@ export enum TreeNodeType {
   Tree_search_score_leaf = 10911, // 分数范围的叶子
   Tree_search_contest_leaf = 10921, // 分数范围的叶子
 
+  Tree_recentContestList = 11000,  // 题目列表 最近比赛列表
+  Tree_recentContestList_contest = 11010,  // 题目列表 最近比赛列表/比赛
+  Tree_recentContestList_contest_leaf = 11011,  // 题目列表 最近比赛列表/比赛/题目
 
   // 工地=================
 
@@ -167,7 +179,8 @@ export function is_problem_by_nodeType(nt) {
     nodeType == TreeNodeType.Tree_contest_Q4_leaf ||
     nodeType == TreeNodeType.Bricks_NeedReview_Day_leaf ||
     nodeType == TreeNodeType.Bricks_TodaySubmit_leaf ||
-    nodeType == TreeNodeType.Bricks_Diy_leaf
+    nodeType == TreeNodeType.Bricks_Diy_leaf ||
+    nodeType == TreeNodeType.Tree_recentContestList_contest_leaf
   );
 
 }

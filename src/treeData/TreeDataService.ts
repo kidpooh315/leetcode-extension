@@ -101,6 +101,12 @@ export class TreeDataService implements vscode.TreeDataProvider<TreeNodeModel> {
       if (element.nodeType == TreeNodeType.Tree_day) {
         return treeViewController.getDayNodes(element);
       }
+      else if (element.nodeType == TreeNodeType.Tree_recentContestList) {
+        return treeViewController.getRecentContestList();
+      }
+      else if (element.nodeType == TreeNodeType.Tree_recentContestList_contest) {
+        return treeViewController.getContestQuestionNodes(element);
+      }
       else if (element.nodeType == TreeNodeType.Tree_search) {
         if (element.id == SearchSetType.ScoreRange) {
           return treeViewController.getScoreRangeNodes(element.input);

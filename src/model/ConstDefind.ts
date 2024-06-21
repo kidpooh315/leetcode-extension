@@ -136,6 +136,7 @@ export enum RootNodeSort {
   Score = 8,
   ScoreRange = 9,
   Contest = 9,
+  RecentContestList = 10,
   DIFEASY = 1,
   DIFMID = 2,
   DIFHARD = 3,
@@ -196,6 +197,7 @@ export enum Category {
   Score = "Score",
   Choice = "Choice",
   Contest = "Contest",
+  RecentContestList = "RecentContestList",
 }
 
 export enum DescriptionConfiguration {

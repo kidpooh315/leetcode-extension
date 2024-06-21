@@ -119,6 +119,19 @@ class CorePlugin extends ChainNodeBase {
     });
   };
 
+  getRecentContest = (cb) => {
+    this.getRecentContestList(function (e, result) {
+      if (e) return cb(e);
+      return cb(null, result);
+    });
+  };
+
+  getContestQuestion = (contestName, cb) => {
+    this.getContestQuestionList(contestName, function (e, result) {
+      if (e) return cb(e);
+      return cb(null, result);
+    });
+  };
   getRating = (cb) => {
     this.getRatingOnline(function (e, result) {
       if (e) return cb(e);

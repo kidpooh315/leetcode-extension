@@ -31,6 +31,14 @@ export class ChainNodeBase {
     this.next.getQuestionOfToday(cb);
   }
 
+  public getRecentContestList(cb: Function): void {
+    this.next.getRecentContestList(cb);
+  }
+
+  public getContestQuestionList(contestName:string, cb: Function): void {
+    this.next.getContestQuestionList(contestName,cb);
+  }
+
   public getRatingOnline(cb: Function): void {
     this.next.getRatingOnline(cb);
   }
@@ -106,6 +114,14 @@ export class ChainNodeBase {
 
   public getTodayQuestion(cb: Function): void {
     this.next.getTodayQuestion(cb);
+  }
+
+  public getRecentContest(cb: Function): void {
+    this.next.getRecentContest(cb);
+  }
+
+  public getContestQuestion(contestName:string, cb: Function): void {
+    this.next.getContestQuestion(contestName,cb);
   }
 
   public getQueryZ(username, cb: Function): void {

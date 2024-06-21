@@ -52,8 +52,7 @@ export class DebugPy3 {
     if (!moduleExportsReg.test(fileContent.toString())) {
       await fse.writeFile(
         filePath,
-        // TODO: debug-begin 更新
-        `# @lcpr-before-debug-begin\nfrom python3problem${temp_meta_id.toString()} import *\nfrom typing import *\n# @lcpr-before-debug-end\n\n` +
+        `# @lcpr-before-debug-begin\nfrom python3problem${temp_meta_id.toString()} import * # type: ignore \nfrom typing import *\n# @lcpr-before-debug-end\n\n` +
           fileContent.toString()
       );
     }

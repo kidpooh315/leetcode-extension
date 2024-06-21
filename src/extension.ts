@@ -29,6 +29,8 @@ import { PreviewMediator, PreviewProxy } from "./preView/PreviewModule";
 import { DebugMediator, DebugProxy } from "./debug/DebugModule";
 import { RankScoreDataMediator, RankScoreDataProxy } from "./rankScore/RankScoreDataModule";
 import { TodayDataMediator, TodayDataProxy } from "./todayData/TodayDataModule";
+import { RecentContestMediator, RecentContestProxy } from "./recentContestData/RecentContestDataModule";
+import { ContestQuestionMediator, ContestQuestionProxy } from "./recentContestData/ContestQuestionDataModule";
 
 //==================================BABA========================================
 
@@ -73,6 +75,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
       RankScoreDataMediator,
       TodayDataProxy,
       TodayDataMediator,
+      RecentContestProxy,
+      RecentContestMediator,
+      ContestQuestionProxy,
+      ContestQuestionMediator,
     ]);
 
     // 资源管理

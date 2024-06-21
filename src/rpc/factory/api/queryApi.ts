@@ -74,6 +74,18 @@ class QueryApi extends ApiBase {
         default: false,
         describe: "get Hints Programming language of the source code",
       })
+      .option("i", {
+        alias: "getRecentContest",
+        type: "boolean",
+        default: false,
+        describe: "getRecentContestList",
+      })
+      .option("j", {
+        alias: "getContestQuestion",
+        type: "string",
+        default: false,
+        describe: "get Question list of a contest",
+      })
       .option("z", {
         alias: "test",
         type: "string",
@@ -155,6 +167,16 @@ class QueryApi extends ApiBase {
           });
         });
       }
+    } if (argv.i) {
+      chainMgr.getChainHead().getRecentContest(function (e, result) {
+        if (e) return;
+        reply.info(JSON.stringify(result));
+      });
+    } if (argv.j) {
+      chainMgr.getChainHead().getContestQuestion(argv.j, function (e, result) {
+        if (e) return;
+        reply.info(JSON.stringify(result));
+      });
     } else if (argv.z) {
       chainMgr.getChainHead().getQueryZ(argv.z, function (e, result) {
         if (e) return;
