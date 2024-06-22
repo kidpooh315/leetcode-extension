@@ -1,6 +1,6 @@
 import { BABAMediator, BABAProxy, BabaStr, BaseCC, BABA } from "../BABA";
 import { OutPutType } from "../model/ConstDefind";
-import { IContestData, ITreeDataNormal} from "../model/TreeNodeModel";
+import { IContestData, ITreeDataNormal } from "../model/TreeNodeModel";
 import { isUseEndpointTranslation } from "../utils/ConfigUtils";
 import { promptForSignIn, ShowMessage } from "../utils/OutputUtils";
 
@@ -64,7 +64,7 @@ export class RecentContestProxy extends BABAProxy {
       const contestLen = query_result.contests.length;
       for (let i = 0; i < contestLen; i++) {
         const contest = query_result.contests[i];
-        if(this.getRecentContestData(contest.titleSlug)) {
+        if (this.getRecentContestData(contest.titleSlug)) {
           continue;
         }
         let data: any = {};
@@ -75,7 +75,7 @@ export class RecentContestProxy extends BABAProxy {
         data.duration = contest.duration;
         recentContestData.setSlugInfo(data);
       }
-      if (contestLen>0) {
+      if (contestLen > 0) {
         BABA.sendNotification(BabaStr.TreeData_searchRecentContestFinish);
       }
     } catch (error) {
@@ -105,10 +105,10 @@ export class RecentContestMediator extends BABAMediator {
       case BabaStr.VSCODE_DISPOST:
         break;
       case BabaStr.StartReadData:
-        await BABA.getProxy(BabaStr.RecentContestProxy).searchRecentContest();
+        // await BABA.getProxy(BabaStr.RecentContestProxy).searchRecentContest();
         break;
       case BabaStr.BABACMD_refresh:
-        BABA.getProxy(BabaStr.RecentContestProxy).searchRecentContest();
+        // BABA.getProxy(BabaStr.RecentContestProxy).searchRecentContest();
         break;
       // case BabaStr.every_minute:
       //   await todayData.checkNeedReadNew();

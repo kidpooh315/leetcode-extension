@@ -68,9 +68,9 @@ export class ContestQuestionMediator extends BABAMediator {
   async handleNotification(_notification: BaseCC.BaseCC.INotification) {
     switch (_notification.getName()) {
       case BabaStr.TreeData_searchRecentContestFinish:
-        let ContestList = BABA.getProxy(BabaStr.RecentContestProxy).getAllRecentContestData();
-        let contestName = Array.from(ContestList.keys()).join(",");
-        await BABA.getProxy(BabaStr.ContestQuestionProxy).searchContestQuestionData(contestName);
+        // let ContestList = BABA.getProxy(BabaStr.RecentContestProxy).getAllRecentContestData();
+        // let contestName = Array.from(ContestList.keys()).join(",");
+        // await BABA.getProxy(BabaStr.ContestQuestionProxy).searchContestQuestionData(contestName);
         break;
       default:
         break;

@@ -1032,14 +1032,14 @@ class TreeViewController implements Disposable {
         },
         TreeNodeType.Tree_contest
       ),
-      CreateTreeNodeModel(
-        {
-          id: Category.RecentContestList,
-          name: Category.RecentContestList,
-          rootNodeSortId: RootNodeSort.RecentContestList,
-        },
-        TreeNodeType.Tree_recentContestList
-      ),
+      // CreateTreeNodeModel(
+      //   {
+      //     id: Category.RecentContestList,
+      //     name: Category.RecentContestList,
+      //     rootNodeSortId: RootNodeSort.RecentContestList,
+      //   },
+      //   TreeNodeType.Tree_recentContestList
+      // ),
     ];
 
     // 获取每日一题的数据
@@ -1157,16 +1157,16 @@ class TreeViewController implements Disposable {
   }
 
   public getRecentContestList(): TreeNodeModel[] {
-      const sorceNode: TreeNodeModel[] = [];
-      let recentContestNodeList: ITreeDataNormal[] | undefined = BABA.getProxy(BabaStr.RecentContestProxy).getAllContestTreeNode();
+    const sorceNode: TreeNodeModel[] = [];
+    let recentContestNodeList: ITreeDataNormal[] | undefined = BABA.getProxy(BabaStr.RecentContestProxy).getAllContestTreeNode();
 
-      if (recentContestNodeList != undefined) {
-        for (let i = 0; i < recentContestNodeList.length; i++) {
-          sorceNode.push(CreateTreeNodeModel(recentContestNodeList[i], TreeNodeType.Tree_recentContestList_contest));
-        }
+    if (recentContestNodeList != undefined) {
+      for (let i = 0; i < recentContestNodeList.length; i++) {
+        sorceNode.push(CreateTreeNodeModel(recentContestNodeList[i], TreeNodeType.Tree_recentContestList_contest));
       }
-      return sortNodeList(sorceNode);
     }
+    return sortNodeList(sorceNode);
+  }
 
   public getContestQuestionNodes(element: TreeNodeModel): TreeNodeModel[] {
     const sorceNode: TreeNodeModel[] = [];
