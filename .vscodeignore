@@ -12,3 +12,15 @@ tslint.json
 ACKNOWLEDGEMENTS.md
 docs
 .github
+c.sh
+delete.sh
+init_env.sh
+p.sh
+nls.ts
+nls.js
+processdatajson.ts
+.eslintignore
+.eslintrc.js
+_config.yml
+check_list_case.ts
+hot.sh
