@@ -88,6 +88,8 @@ export enum BabaStr {
   TreeData_rebuildTreeData = "TreeData_rebuildTreeData",
   QuestionData_ReBuildQuestionDataFinish = "QuestionData_ReBuildQuestionDataFinish",
   TreeData_searchTodayFinish = "TreeData_searchTodayFinish",
+  TreeData_searchRecentContestFinish = "TreeData_searchRecentContestFinish",
+  TreeData_searchContestQuestionFinish = "TreeData_searchContestQuestionFinish",
   TreeData_searchUserContest = "TreeData_searchUserContest",
   TreeData_searchUserContestFinish = "TreeData_searchUserContestFinish",
   TreeData_searchScoreRangeFinish = "TreeData_searchScoreRangeFinish",
@@ -134,6 +136,10 @@ export enum BabaStr {
   BricksData_removeQidFromGroupFinish = "BricksData_removeQidFromGroupFinish",
   TodayDataProxy = "TodayDataProxy",
   TodayDataMediator = "TodayDataMediator",
+  RecentContestProxy = "RecentContestProxy",
+  RecentContestMediator = "RecentContestMediator",
+  ContestQuestionProxy = "ContestQuestionProxy",
+  ContestQuestionMediator = "ContestQuestionMediator",
 }
 
 export class BABA {

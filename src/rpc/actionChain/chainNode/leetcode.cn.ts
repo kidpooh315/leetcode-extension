@@ -15,6 +15,7 @@ import { configUtils } from "../../utils/configUtils";
 
 import { sessionUtils } from "../../utils/sessionUtils";
 import { reply } from "../../utils/ReplyUtils";
+import { Queue } from "../../utils/queueUtils";
 class LeetCodeCn extends ChainNodeBase {
   id = 15;
   name = "leetcode.cn";
@@ -124,7 +125,7 @@ class LeetCodeCn extends ChainNodeBase {
     };
 
     request.post(opts, function (e, resp, body) {
-      e = checkError(e, resp, 200);
+    e = checkError(e, resp, 200);
       if (e) return cb(e);
       let result: any = {};
       result.titleSlug = body.data.todayRecord[0].question.titleSlug;
@@ -135,6 +136,89 @@ class LeetCodeCn extends ChainNodeBase {
       return cb(null, result);
     });
   };
+
+  /* A function that gets the recent contests from leetcode. */
+  getRecentContestList = (cb) => {
+    const opts = makeOpts(configUtils.sys.urls.graphql);
+    opts.headers.Origin = configUtils.sys.urls.base;
+    opts.headers.Referer = "https://leetcode.cn/contest/";
+
+    opts.json = true;
+    /*
+      {"operationName":"contestHistory","variables":{"pageNum":1,"pageSize":10},"query":"query contestHistory($pageNum: Int!, $pageSize: Int) {\n  contestHistory(pageNum: $pageNum, pageSize: $pageSize) {\n    totalNum\n    contests {\n      containsPremium\n      title\n      cardImg\n      titleSlug\n      description\n      startTime\n      duration\n      originStartTime\n      isVirtual\n      company {\n        watermark\n        __typename\n      }\n      isEeExamContest\n      __typename\n    }\n    __typename\n  }\n}\n"}
+    */
+    opts.body = {
+      operationName: "contestHistory",
+      variables: {"pageNum":1,"pageSize":10},
+      query: [
+        "query contestHistory($pageNum: Int!, $pageSize: Int) {",
+        "  contestHistory(pageNum: $pageNum, pageSize: $pageSize) {",
+        "    totalNum",
+        "    contests {",
+        "      containsPremium",
+        "      title",
+        // "      cardImg",
+        "      titleSlug",
+        // "      description",
+        "      startTime",
+        "      duration",
+        "      originStartTime",
+        "      isVirtual",
+        "      company {",
+        "        watermark",
+        "        __typename",
+        "      }",
+        "      isEeExamContest",
+        "      __typename",
+        "    }",
+        "    __typename",
+        "  }",
+        "}",
+      ].join("\n"),
+    };
+
+    request.post(opts, function (e, resp, body) {
+      e = checkError(e, resp, 200);
+      if (e) return cb(e);
+      let result: any = {};
+      result.contests = body.data.contestHistory.contests;
+      return cb(null, result);
+    });
+  };
+
+  /* A function that gets the questions from contests. */
+  getContestQuestionList = (contestName,cb) => {
+    let problems = [];
+    let contestList = contestName.split(",");
+    let that = this;
+    const getQuestion = function (contestName, _, cb) {
+      that.getQuestionFromOneContest(contestName, function (e, _problems) {
+        if (e) {
+          //
+        } else {
+          problems = problems.concat(_problems);
+        }
+        return cb(e);
+      });
+    };
+    const q = new Queue(contestList, {}, getQuestion);
+    q.run(null, function (e) {
+      return cb(e, problems);
+    });
+
+  };
+
+  getQuestionFromOneContest = (contestName,cb) => {
+    request.get("https://leetcode.cn/contest/api/info/" + contestName + "/",{ json: true }, function (e, resp, body) {
+      e = checkError(e, resp, 200);
+      if (e) return cb(e);
+      let result: any = {};
+      result.questions = body.questions;
+      result.contest = contestName;
+      return cb(null, result);
+    });
+  };
+
   /* A function that is used to get the user contest ranking information. */
   getUserContestP = (username, cb) => {
     const opts = makeOpts(configUtils.sys.urls.noj_go);

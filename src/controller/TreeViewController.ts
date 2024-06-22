@@ -46,7 +46,7 @@ import {
   getBelongingWorkspaceFolderUri,
   selectWorkspaceFolder,
 } from "../utils/ConfigUtils";
-import { CreateTreeNodeModel, ITodayDataResponse, TreeNodeModel, TreeNodeType } from "../model/TreeNodeModel";
+import { CreateTreeNodeModel, ITodayDataResponse, TreeNodeModel, TreeNodeType, ITreeDataNormal } from "../model/TreeNodeModel";
 import { ISearchSet } from "../model/ConstDefind";
 
 import { ShowMessage, promptForSignIn, promptHintMessage } from "../utils/OutputUtils";
@@ -1032,6 +1032,14 @@ class TreeViewController implements Disposable {
         },
         TreeNodeType.Tree_contest
       ),
+      CreateTreeNodeModel(
+        {
+          id: Category.RecentContestList,
+          name: Category.RecentContestList,
+          rootNodeSortId: RootNodeSort.RecentContestList,
+        },
+        TreeNodeType.Tree_recentContestList
+      ),
     ];
 
     // 获取每日一题的数据
@@ -1145,6 +1153,30 @@ class TreeViewController implements Disposable {
       sorceNode.push(CreateTreeNodeModel(DayQuestionNode.get_data(), TreeNodeType.Tree_day_leaf));
     }
 
+    return sortNodeList(sorceNode);
+  }
+
+  public getRecentContestList(): TreeNodeModel[] {
+      const sorceNode: TreeNodeModel[] = [];
+      let recentContestNodeList: ITreeDataNormal[] | undefined = BABA.getProxy(BabaStr.RecentContestProxy).getAllContestTreeNode();
+
+      if (recentContestNodeList != undefined) {
+        for (let i = 0; i < recentContestNodeList.length; i++) {
+          sorceNode.push(CreateTreeNodeModel(recentContestNodeList[i], TreeNodeType.Tree_recentContestList_contest));
+        }
+      }
+      return sortNodeList(sorceNode);
+    }
+
+  public getContestQuestionNodes(element: TreeNodeModel): TreeNodeModel[] {
+    const sorceNode: TreeNodeModel[] = [];
+    let questionList = BABA.getProxy(BabaStr.ContestQuestionProxy).getContestQuestionData(element.id);
+    for (let question of questionList) {
+      let DayQuestionNode: TreeNodeModel | undefined = BABA.getProxy(BabaStr.QuestionDataProxy).getNodeByQid(question);
+      if (DayQuestionNode != undefined) {
+        sorceNode.push(CreateTreeNodeModel(DayQuestionNode.get_data(), TreeNodeType.Tree_recentContestList_contest_leaf));
+      }
+    }
     return sortNodeList(sorceNode);
   }
 

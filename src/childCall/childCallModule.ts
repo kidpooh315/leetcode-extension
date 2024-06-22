@@ -291,6 +291,23 @@ class ExecuteService implements Disposable {
     return solution;
   }
 
+  public async getRecentContest(needTranslation: boolean): Promise<string> {
+    // solution don't support translation
+    const cmd: string[] = [await this.getLeetCodeBinaryPath(), "query", "-i"];
+    if (!needTranslation) {
+      cmd.push("-T");
+    }
+    const solution: string = await this.callWithMsg("正在获取近期竞赛~", this.nodeExecutable, cmd);
+    return solution;
+  }
+
+  public async getContestQuestion(contestName: string): Promise<string> {
+    // solution don't support translation
+    const cmd: string[] = [await this.getLeetCodeBinaryPath(), "query", "-j", contestName];
+    const solution: string = await this.callWithMsg("正在获取近期竞赛的题目~", this.nodeExecutable, cmd);
+    return solution;
+  }
+
   public async getDescription(problemNodeId: string, needTranslation: boolean): Promise<string> {
     const cmd: string[] = [await this.getLeetCodeBinaryPath(), "show", problemNodeId, "-x"];
     if (!needTranslation) {
